@@ -1,0 +1,18 @@
+{
+  "name": "woap",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:lencx/woap.git",
+  "author": "lencx <cxin1314@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "woap": "index.js"
+  },
+  "dependencies": {
+    "@octokit/graphql": "^4.6.4",
+    "chalk": "^4.1.1",
+    "minimist": "^1.2.5",
+    "qrcode": "^1.4.4",
+    "slugify": "^1.6.0"
+  }
+}
