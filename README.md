@@ -47,9 +47,11 @@ options:
 ## 截图预览
 
 - 脚注形式
+
   <img width="420" src="./assets/qrcode.png" alt="脚注形式" />
 
 - 二维码形式
+
   <img width="420" src="./assets/footnotes.png" alt="二维码形式" />
 
 ---
