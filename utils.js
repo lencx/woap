@@ -41,13 +41,15 @@ function postQRCode({ content, root, number }) {
     generateQR(imgPath, _a[1]);
     count += 1;
 
+    const imgURL = argv['img-path'] ? path.join(argv['img-path'], issues) : '.';
+
     const qrCard = `<div style="margin: 12px 0 20px;padding: 16px 20px;max-width: 100%;box-sizing: border-box;white-space: normal;text-size-adjust: auto;color: rgb(63, 63, 63);font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;letter-spacing: 0.476px;text-align: left;display: flex;align-items: center;background-color: rgb(246, 246, 246);box-shadow: rgb(199, 201, 204) 0px 0px 0px inset;border-radius: 6px;border-color: rgb(62, 62, 62);font-size: 12px;overflow: hidden;overflow-wrap: break-word !important;">
       <div style="padding-right: 12px;max-width: 100%;box-sizing: border-box;flex: 1 1 0%;display: flex;flex-direction: column;justify-content: space-between;overflow-wrap: break-word !important;">
         <strong style="max-width: 100%;box-sizing: border-box;color: rgb(114, 114, 114);line-height: 1.75em;overflow-wrap: break-word !important;">${argv['qrcode-tip'] || '长按识别二维码查看原文'}</strong>
         <p stype="max-width: 100%;box-sizing: border-box;min-height: 1em;line-height: 1.8;color: rgb(114, 114, 114);word-break: break-all;overflow-wrap: break-word !important;">${_a[1]}</p>
       </div>
       <div style="max-width: 90px;box-sizing: border-box;flex-shrink: 0;font-size: 0px;overflow-wrap: break-word !important;">
-        <img style="margin-right: auto; margin-left: auto; box-sizing: border-box; vertical-align: middle; border-style: none; display: block; border-radius: 4px; overflow-wrap: break-word !important; visibility: visible !important; width: 90px !important; height: auto !important;" src="${argv['img-path'] || '.'}/imgs/${imgName}" />
+        <img style="margin-right: auto; margin-left: auto; box-sizing: border-box; vertical-align: middle; border-style: none; display: block; border-radius: 4px; overflow-wrap: break-word !important; visibility: visible !important; width: 90px !important; height: auto !important;" src="${imgURL}/imgs/${imgName}" />
       </div>
     </div>`;
 
