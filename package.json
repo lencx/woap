@@ -1,6 +1,6 @@
 {
   "name": "woap",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "index.js",
   "repository": "git@github.com:lencx/woap.git",
   "author": "lencx <cxin1314@gmail.com>",
@@ -10,10 +10,10 @@
   },
   "keywords": [
     "woap",
+    "公众号",
     "wechat",
     "wechat-link",
     "weixin",
-    "公众号",
     "blog",
     "article"
   ],

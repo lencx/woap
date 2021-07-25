@@ -20,7 +20,7 @@ async function init() {
     process.exit();
   }
 
-  const _root = path.resolve(__dirname, root);
+  const _root = path.resolve(process.cwd(), root);
   const isExist = fs.existsSync(_root);
   if (!isExist) fs.mkdirSync(_root, { recursive: true });
 

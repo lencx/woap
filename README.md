@@ -1,6 +1,8 @@
 # woap
 
-> 通过给 GitHub Discussions 打标签生成微信文章（支持二维码及脚注形式）
+> woap - WeChat Official Accounts Platform
+
+通过给 GitHub Discussions 打标签生成微信文章（支持二维码及脚注形式）
 
 ## 安装
 
@@ -18,6 +20,13 @@ woap -h
 # 例如
 woap --owner=lencx --repo=z --token=your_github_token --root=docs --qrcode-tip=识别二维码
 ```
+
+### GitHub Actions
+
+> 配合 GitHub Actions 使用，每天定时生成
+
+- [.github/workflows/deploy.yml](https://github.com/lencx/z/blob/main/.github/workflows/deploy.yml#L22)
+- [package.json](https://github.com/lencx/z/blob/main/package.json#L14)
 
 ### 参数
 
