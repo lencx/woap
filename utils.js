@@ -5,7 +5,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const { graphql } = require("@octokit/graphql");
 const chalk = require('chalk');
 
-const { token } = argv;
+const { token, suffix = 'md' } = argv;
 
 const graphqlClient = graphql.defaults({
   headers: {
@@ -124,7 +124,7 @@ function mkdir(root) {
 }
 
 function writePost({ root, title, content, type }) {
-  const _root = path.resolve(root, `index.md`);
+  const _root = path.resolve(root, `index.${suffix}`);
   try {
     fs.writeFileSync(_root, content);
     console.log(chalk.green(`[📝 ${type}] ${title}`), '~>', chalk.grey(_root));
