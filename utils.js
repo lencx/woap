@@ -19,7 +19,7 @@ function postFootnotes(content) {
   content = content.replace(/<a (.+?)>(.+?)<\/a>/ig, (_, a, b) => {
     const _a = a.match(/href=\"(.+?)\"/);
     footnotes.push([_a[1], b]);
-    return `<a ${a}>${b}<sup>[${footnotes.length + 1}]</sup></a>`
+    return `<a ${a}>${b}<sup>[${footnotes.length}]</sup></a>`
   });
 
   const footContent = footnotes.map((i) => `<li style="font-size: 14px"><b style="color: #666">${i[1]}</b>: <span style="color: #888">${i[0]}</span></li>`).join('\n');
