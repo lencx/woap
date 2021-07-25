@@ -1,19 +1,13 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const path = require('path');
 const chalk = require('chalk');
-const qrcode = require('qrcode');
-// const slugify = require('slugify');
 const argv = require('minimist')(process.argv.slice(2));
-const { graphql } = require("@octokit/graphql");
 
-const { owner, repo, token, labels: otherLabels } = argv;
+const { getPosts } = require('./utils');
 
-const graphqlClient = graphql.defaults({
-  headers: {
-    authorization: `token ${token}`,
-  },
-});
+const { owner, repo, token, labels: otherLabels, root = 'posts' } = argv;
 
 async function init() {
   if (argv.h || argv.help) {
@@ -26,7 +20,13 @@ async function init() {
     process.exit();
   }
 
-  getPosts({ owner, repo, otherLabels });
+  const _root = path.resolve(__dirname, root);
+  const isExist = fs.existsSync(_root);
+  if (!isExist) fs.mkdirSync(_root, { recursive: true });
+
+  console.log();
+
+  getPosts({ owner, repo, otherLabels, root: _root });
 }
 
 init()
@@ -34,95 +34,31 @@ init()
     console.error(err);
   });
 
-async function getPosts({ owner, repo, otherLabels = [] }) {
-  let last = null;
-  const _data = await graphqlClient(`
-    query ($owner: String!, $repo: String!) {
-      repository(owner: $owner, name: $repo) {
-        discussions {
-          totalCount
-        }
-      }
-    }
-  `, {
-    owner,
-    repo,
-  });
-
-  totalCount = _data.repository.discussions.totalCount;
-  for (let i = 0; i < Math.ceil(totalCount / 100); i++) {
-    const result = await getIssues({ owner, repo, lastCursor: last });
-
-    result.forEach(({ node: post }) => {
-      const { labels, number } = post;
-      const _labels = labels.edges;
-      _labels.forEach(({ node: label }) => {
-        if (['wechat-link', 'wechat-post', ...otherLabels].includes(label.name)) {
-          // TODO:
-          console.log(number);
-        }
-      })
-    });
-
-    last = Array.from(result).pop().cursor;
-  }
-}
-
-async function getIssues({ owner, repo, lastCursor }) {
-  const { repository } = await graphqlClient(`
-    query ($owner: String!, $repo: String!, $cursor: String) {
-      repository(owner: $owner, name: $repo) {
-        discussions(first: 100, after: $cursor) {
-          edges {
-            cursor
-            node {
-              title
-              number
-              body
-              labels(first: 10) {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `, {
-    owner,
-    repo,
-    cursor: lastCursor,
-  });
-  return repository.discussions.edges;
-}
-
-function mdToLinkGroup(file) {
-  const content = fs.readFileSync(file).toString();
-  const data = content.match(/\[.*\]\(http.*\)/ig);
-  return data.map(i => {
-    const [_, a, b] = i.match(/\[(.*)\]\((http.*)\)/);
-    return [a, b];
-  })
-}
-
-async function generateQR(str) {
-  try {
-    return await qrcode.toDataURL(str);
-  } catch (err) {
-    console.error(err);
-  }
-};
 
 function cmdHelp() {
+  const g = chalk.green;
+  const y = chalk.yellow;
   return console.log(`
-usage: woap
+usage: ${g('woap')}
+
 options:
-  --owner
-  --repo
-  --token: generate token -> https://github.com/settings/tokens/new
-  --labels: this \`label\` needs to generate WeChat articles, if there are multiple, use commas to separate
-  `);
+  ${g('--owner')}:          GitHub 用户名（username）
+
+  ${g('--repo')}:           需要生成微信文章的 GitHub 仓库名（请确保已经开启 Discussions）
+                    ${y('Repository -> Settings -> Options -> Features -> Discussions')}
+
+  ${g('--root')}:           生成文章的根目录, 默认值为 ${y('posts')}
+
+  ${g('--qrcode-tip')}:     二维码提示文案，默认值为 ${y('长按识别二维码查看原文')}
+
+  ${g('--footnote-title')}: 微信链接脚注标题，默认值为 ${y('参考资料')}
+
+  ${g('--token')}:          GitHub API 请求需要用到，获取 GitHub Token -> ${y('https://github.com/settings/tokens/new')}
+
+  ${g('--labels')}:         需要生成微信文章的 labels，只能生成带微信脚注的文章
+                    多个 labels 使用英文逗号 \`,\` 分割，内置 ${y('wechat-link,wechat-post')}
+                    - wechat-link: 生成微信二维码文章（将链接转为二维码）
+                    - wechat-post: 生成微信脚注文章（将链接转为脚注）
+
+具体用法请查看此链接：${y('https://github.com/lencx/woap')}`);
 }
