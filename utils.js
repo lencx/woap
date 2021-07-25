@@ -47,7 +47,7 @@ function postQRCode({ content, root, number }) {
         <p stype="max-width: 100%;box-sizing: border-box;min-height: 1em;line-height: 1.8;color: rgb(114, 114, 114);word-break: break-all;overflow-wrap: break-word !important;">${_a[1]}</p>
       </div>
       <div style="max-width: 90px;box-sizing: border-box;flex-shrink: 0;font-size: 0px;overflow-wrap: break-word !important;">
-        <img style="margin-right: auto; margin-left: auto; box-sizing: border-box; vertical-align: middle; border-style: none; display: block; border-radius: 4px; overflow-wrap: break-word !important; visibility: visible !important; width: 90px !important; height: auto !important;" src="./imgs/${imgName}" />
+        <img style="margin-right: auto; margin-left: auto; box-sizing: border-box; vertical-align: middle; border-style: none; display: block; border-radius: 4px; overflow-wrap: break-word !important; visibility: visible !important; width: 90px !important; height: auto !important;" src="${argv['img-path'] || '.'}/imgs/${imgName}" />
       </div>
     </div>`;
 
