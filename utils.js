@@ -4,6 +4,9 @@ const qrcode = require('qrcode');
 const argv = require('minimist')(process.argv.slice(2));
 const { graphql } = require("@octokit/graphql");
 const chalk = require('chalk');
+const juice = require('juice');
+
+const mdcss = require('./mdcss');
 
 const { token, suffix = 'md' } = argv;
 
@@ -43,15 +46,15 @@ function postQRCode({ content, root, number }) {
 
     const imgURL = argv['img-path'] ? path.join(argv['img-path'], issues) : '.';
 
-    const qrCard = `<div style="margin: 12px 0 20px;padding: 16px 20px;max-width: 100%;box-sizing: border-box;white-space: normal;text-size-adjust: auto;color: rgb(63, 63, 63);font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;letter-spacing: 0.476px;text-align: left;display: flex;align-items: center;background-color: rgb(246, 246, 246);box-shadow: rgb(199, 201, 204) 0px 0px 0px inset;border-radius: 6px;border-color: rgb(62, 62, 62);font-size: 12px;overflow: hidden;overflow-wrap: break-word !important;">
-      <div style="padding-right: 12px;max-width: 100%;box-sizing: border-box;flex: 1 1 0%;display: flex;flex-direction: column;justify-content: space-between;overflow-wrap: break-word !important;">
-        <strong style="max-width: 100%;box-sizing: border-box;color: rgb(114, 114, 114);line-height: 1.75em;overflow-wrap: break-word !important;">${argv['qrcode-tip'] || '长按识别二维码查看原文'}</strong>
-        <p stype="max-width: 100%;box-sizing: border-box;min-height: 1em;line-height: 1.8;color: rgb(114, 114, 114);word-break: break-all;overflow-wrap: break-word !important;">${_a[1]}</p>
-      </div>
-      <div style="max-width: 90px;box-sizing: border-box;flex-shrink: 0;font-size: 0px;overflow-wrap: break-word !important;">
-        <img style="margin-right: auto; margin-left: auto; box-sizing: border-box; vertical-align: middle; border-style: none; display: block; border-radius: 4px; overflow-wrap: break-word !important; visibility: visible !important; width: 90px !important; height: auto !important;" src="${imgURL}/imgs/${imgName}" />
-      </div>
-    </div>`;
+    const qrCard = `<section class="woap-qrcode">
+      <section class="text">
+        <strong>${argv['qrcode-tip'] || '长按识别二维码查看原文'}</strong>
+        <p>${_a[1]}</p>
+      </section>
+      <section class="qrcode">
+        <img src="${imgURL}/imgs/${imgName}" />
+      </section>
+    </section>`;
 
     return `<li><a ${a}>${b}</a>${c || ''}\n\n${qrCard}</li>`
   });
@@ -100,7 +103,40 @@ async function getPosts({ owner, repo, otherLabels = '', root }) {
             type = 'Post';
           }
 
-          writePost({ root: _root, content, title, type });
+          // copyElementToClipboard: https://stackoverflow.com/questions/34191780/javascript-copy-string-to-clipboard-as-text-html
+          const html = juice(`<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+<style>${mdcss}</style>
+<script>
+function copyElementToClipboard(element) {
+  window.getSelection().removeAllRanges();
+  let range = document.createRange();
+  range.selectNode(typeof element === 'string' ? document.getElementById(element) : element);
+  window.getSelection().addRange(range);
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+}
+window.addEventListener('load', function() {
+  const woapBtn = document.getElementById('woap-btn');
+  const woapHTML = document.getElementById('woap-body');
+  woapBtn.addEventListener('click', function() {
+    copyElementToClipboard(woapHTML);
+    alert('复制到公众号')
+  }, false);
+})
+</script>
+</head>
+<body>
+<div class="markdown-body" id="woap-body">${content}</div>
+<div id="woap-btn" style="position: fixed;top: 10px;right: 10px;width: 53px;height: 51px;box-sizing: border-box;cursor: pointer;background: #fff;border-radius: 5px;padding: 5px;box-shadow: 0 0 2px #d8d8d8;">
+<svg style="width: 100%" height="41" viewBox="0 0 43 41" width="43" xmlns="http://www.w3.org/2000/svg"><g fill="#07c160"><path d="m39.7 15.3c-3.7-4.9-10.2-6.2-16.1-4.1.2.1.4.1.6.2 8.7 2.9 13.3 12.3 10.4 21-.8 2.3-2 4.3-3.5 6 1.9-.5 3.8-1.3 5.4-2.5 6.6-5.1 7.9-14.5 3.2-20.6z"/><path d="m18 10.4c.4-.3.7-.5 1.1-.8h.1c.4-.2.8-.4 1.1-.7 0 0 .1 0 .1-.1.8-.4 1.6-.7 2.4-1 .1 0 .1 0 .2-.1.4-.1.8-.3 1.2-.4h.1c.4-.1.8-.2 1.2-.2h.2c.6-.1 1-.1 1.4-.1h.3c.4 0 .9-.1 1.3-.1.5 0 1 0 1.5.1h.2c.5 0 .9.1 1.4.2h.2c.5.1.9.2 1.3.3.1 0 .1 0 .2.1.5.1 1 .2 1.4.4-.2-.4-.4-.7-.4-.7-2.9-4.6-7.7-7.3-12.9-7.3-3.1 0-7.9 1.1-11.5 5.4-2.4 2.9-3.2 6.3-2.7 9.7.3 2.3 1.6 5.4 3.5 7.3.7-4.9 3.3-9.2 7.1-12z"/><path d="m21.6 30.9c-1.3 0-2.6-.2-3.8-.4-.1 0-.3 0-.5 0-.4 0-.7.1-1 .3l-4 2.6c-.1.1-.2.1-.4.1-.3 0-.6-.3-.7-.6 0-.2 0-.3.1-.5 0-.1.4-2 .7-3.2 0-.1.1-.3 0-.4 0-.4-.2-.8-.6-1-4.3-2.9-7.2-7.5-7.8-12.2-1.1 1.7-1.6 3-2.2 5-2.1 7.3 2.5 16 9.9 18.4 8.6 2.8 16.7-.3 19.5-7.6.3-.9.7-2.4.8-3.6-2.9 2.1-6 3.1-10 3.1z"/></g></svg>
+</div>
+</body>
+</html>
+`);
+          writePost({ root: _root, content: html, title, type });
         }
       })
     });
