@@ -5,6 +5,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const { graphql } = require("@octokit/graphql");
 const chalk = require('chalk');
 const juice = require('juice');
+const { v4: uuidv4 } = require('uuid');
 
 const mdcss = require('./mdcss');
 
@@ -31,33 +32,29 @@ function postFootnotes(content) {
   return content;
 }
 
-function postQRCode({ content, root, number }) {
-  let count = 1;
-  mkdir(`${root}/imgs`);
+async function postQRCode(content) {
+  const imgMap = new Map();
 
   content = content.replace(/<li><a (.+?)>(.+?)<\/a>(.+?)?<\/li>/ig, (_, a, b, c) => {
     const _a = a.match(/href=\"(.+?)\"/);
-    const issues = `issues-${number.toString().padStart(4, '0')}`;
-    const imgName = `${issues}_${count}.png`;
-    const imgPath = path.resolve(`${root}/imgs`, imgName);
-
-    generateQR(imgPath, _a[1]);
-    count += 1;
-
-    const imgURL = argv['img-path'] ? path.join(argv['img-path'], issues) : '.';
-
+    const id = uuidv4();
+    imgMap.set(id, _a[1]);
     const qrCard = `<section class="woap-qrcode">
       <section class="text">
         <strong>${argv['qrcode-tip'] || '长按识别二维码查看原文'}</strong>
         <p>${_a[1]}</p>
       </section>
       <section class="qrcode">
-        <img src="${imgURL}/imgs/${imgName}" />
+        <img src="{{${id}}}" />
       </section>
     </section>`;
-
     return `<li><a ${a}>${b}</a>${c || ''}\n\n${qrCard}</li>`
   });
+
+  for (let [imgKey, imgVal] of imgMap.entries()) {
+    const base64Data = await generateQR(imgVal);
+    content = content.replace(new RegExp(`{{${imgKey}}}`), base64Data);
+  }
 
   return content;
 }
@@ -86,7 +83,7 @@ async function getPosts({ owner, repo, otherLabels = '', root }) {
       const { labels, number, bodyHTML, title } = post;
       const _labels = labels.edges;
 
-      _labels.forEach(({ node: label }) => {
+      _labels.forEach(async ({ node: label }) => {
         if (['wechat-link', 'wechat-post', ...(otherLabels.split(','))].includes(label.name)) {
           const _root = path.resolve(root, `issues-${number.toString().padStart(4, '0')}`);
 
@@ -96,7 +93,7 @@ async function getPosts({ owner, repo, otherLabels = '', root }) {
           let type;
 
           if (label.name === 'wechat-link') {
-            content = postQRCode({ content: bodyHTML, root: _root, number });
+            content = await postQRCode(bodyHTML);
             type = 'QRCode';
           } else {
             content = postFootnotes(bodyHTML);
@@ -141,12 +138,9 @@ window.addEventListener('load', function() {
       })
     });
 
-    if (i === Math.ceil(totalCount / 100) - 1) {
-      console.log(`\n✨ Done!`);
-    }
-
     last = Array.from(result).pop().cursor;
   }
+
 }
 
 function mkdir(root) {
@@ -201,14 +195,12 @@ async function getIssues({ owner, repo, lastCursor }) {
   return repository.discussions.edges;
 }
 
-async function generateQR(filename, link) {
+async function generateQR(link) {
   try {
-    const data = await qrcode.toDataURL(link);
-    const base64Data = data.replace(/^data:image\/png;base64,/, '');
-    const binaryData = new Buffer.from(base64Data, 'base64');
-    fs.writeFileSync(filename, binaryData, { encoding: 'base64' });
+    return await qrcode.toDataURL(link);
   } catch (err) {
     console.error(err);
+    return null;
   }
 };
 

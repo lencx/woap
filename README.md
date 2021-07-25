@@ -43,8 +43,6 @@ options:
 
   --suffix:         生成文章的根目录, 默认值为 `md`，可选值 `md` 或 `html`
 
-  --img-path:       二维码地址, 默认值为 `.` （相对路径）
-
   --qrcode-tip:     二维码提示文案，默认值为 `长按识别二维码查看原文`
 
   --footnote-title: 微信链接脚注标题，默认值为 `参考资料`
@@ -68,6 +66,10 @@ options:
   <img width="420" src="./assets/footnotes.png" alt="二维码形式" />
 
 ---
+
+## 视频演示
+
+- [woap - GitHub Discussions 一键脚本自动生成微信文章](https://www.bilibili.com/video/BV1Ab4y1r7uE?share_source=copy_web)
 
 ### License
 

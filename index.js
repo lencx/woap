@@ -24,9 +24,8 @@ async function init() {
   const isExist = fs.existsSync(_root);
   if (!isExist) fs.mkdirSync(_root, { recursive: true });
 
-  console.log();
-
-  getPosts({ owner, repo, otherLabels, root: _root });
+  console.log(`\n${chalk.yellow('woap building...')}\n`);
+  await getPosts({ owner, repo, otherLabels, root: _root });
 }
 
 init()
@@ -50,8 +49,6 @@ options:
   ${g('--root')}:           生成文章的根目录, 默认值为 ${y('posts')}
 
   ${g('--suffix')}:         生成文章的根目录, 默认值为 ${y('md')}，可选值 \`md\` 或 \`html\`
-
-  ${g('--img-path')}:       二维码地址, 默认值为 ${y('.')} （相对路径）
 
   ${g('--qrcode-tip')}:     二维码提示文案，默认值为 ${y('长按识别二维码查看原文')}
 

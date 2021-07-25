@@ -1,6 +1,6 @@
 {
   "name": "woap",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "index.js",
   "repository": "git@github.com:lencx/woap.git",
   "author": "lencx <cxin1314@gmail.com>",
@@ -23,6 +23,7 @@
     "juice": "^8.0.0",
     "minimist": "^1.2.5",
     "qrcode": "^1.4.4",
-    "slugify": "^1.6.0"
+    "slugify": "^1.6.0",
+    "uuid": "^8.3.2"
   }
 }
