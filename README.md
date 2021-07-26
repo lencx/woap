@@ -75,8 +75,7 @@ options:
 
 > 欢迎进群交流相关问题及更多 GitHub 使用小技巧，如果二维码过期，可以关注公众号《浮之静》，发送“进群”，我将拉你进群一起学习。
 
-<img width="200" src="./assets/qun.jpg" alt="微信群" />
-<img width="200" src="./assets/fzj-qrcode.png" alt="公众号：浮之静" />
+<img width="200" src="./assets/qun.jpg" alt="微信群" /> <img width="200" src="./assets/fzj-qrcode.png" alt="公众号：浮之静" />
 
 ### License
 
