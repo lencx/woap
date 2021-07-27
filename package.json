@@ -1,6 +1,6 @@
 {
   "name": "woap",
-  "version": "0.1.7",
+  "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:lencx/woap.git",
   "author": "lencx <cxin1314@gmail.com>",
@@ -15,7 +15,8 @@
     "wechat-link",
     "weixin",
     "blog",
-    "article"
+    "article",
+    "qrcode"
   ],
   "dependencies": {
     "@octokit/graphql": "^4.6.4",

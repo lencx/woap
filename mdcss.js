@@ -725,7 +725,7 @@ module.exports = `.markdown-body {
 }
 
 .markdown-body li {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .markdown-body li>p {

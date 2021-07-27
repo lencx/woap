@@ -41,25 +41,26 @@ function cmdHelp() {
 usage: ${g('woap')}
 
 options:
-  ${g('--owner')}:          GitHub 用户名（username）
+  ${g('--owner')}:     GitHub 用户名（username）
 
-  ${g('--repo')}:           需要生成微信文章的 GitHub 仓库名（请确保已经开启 Discussions）
-                    ${y('Repository -> Settings -> Options -> Features -> Discussions')}
+  ${g('--repo')}:      需要生成微信文章的 GitHub 仓库名（请确保已经开启 Discussions）
+               ${y('Repository -> Settings -> Options -> Features -> Discussions')}
 
-  ${g('--root')}:           生成文章的根目录, 默认值为 ${y('posts')}
+  ${g('--token')}:     GitHub API 请求需要用到，获取 GitHub Token -> ${y('https://github.com/settings/tokens/new')}
 
-  ${g('--suffix')}:         生成文章的根目录, 默认值为 ${y('md')}，可选值 \`md\` 或 \`html\`
+  ${g('--root')}:      生成文章的根目录, 默认值为 ${y('posts')}
 
-  ${g('--qrcode-tip')}:     二维码提示文案，默认值为 ${y('长按识别二维码查看原文')}
+  ${g('--ext')}:       生成文件的扩展名, 默认值为 ${y('html')}，可选值 \`md\` 或 \`html\`
 
-  ${g('--footnote-title')}: 微信链接脚注标题，默认值为 ${y('参考资料')}
+  ${g('--tip')}:       二维码提示文案，默认值为 ${y('长按识别二维码查看原文')}
 
-  ${g('--token')}:          GitHub API 请求需要用到，获取 GitHub Token -> ${y('https://github.com/settings/tokens/new')}
+  ${g('--title')}:     文章的脚注标题，默认值为 ${y('参考资料')}
 
-  ${g('--labels')}:         需要生成微信文章的 labels，只能生成带微信脚注的文章
-                    多个 labels 使用英文逗号 \`,\` 分割，内置 ${y('wechat-link,wechat-post')}
-                    - wechat-link: 生成微信二维码文章（将链接转为二维码）
-                    - wechat-post: 生成微信脚注文章（将链接转为脚注）
+  ${g('--labels')}:    需要生成微信文章的 labels，多个 labels 使用英文逗号 \`,\` 分割，内置 ${y('wechat-link,wechat-post')}
+               新增的 labels 只能生成微信脚注类的文章
+               - wechat-link: 生成微信二维码文章（将链接转为二维码）
+               - wechat-post: 生成微信脚注文章（将链接转为脚注）
 
-具体用法请查看此链接：${y('https://github.com/lencx/woap')}`);
+about woap：${y('https://github.com/lencx/woap')}
+github discussions docs：${y('https://docs.github.com/en/discussions')}`);
 }
