@@ -1,7 +1,18 @@
-module.exports = `.markdown-body {
+module.exports = `.woap-title {
   padding: 20px 10px;
-  max-width: 960px;
+  max-width: 678px;
   margin: 0 auto;
+  font-family: -apple-system,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
+  color: #4a4a4a;
+  border-bottom: solid 1px #eee;
+  text-align: center;
+}
+
+.markdown-body {
+  padding: 20px 10px;
+  max-width: 678px;
+  margin: 0 auto;
+  font-size: 14px;
 }
 
 .markdown-body .octicon {
@@ -10,11 +21,23 @@ module.exports = `.markdown-body {
   vertical-align: text-bottom;
 }
 
+.markdown-body code {
+  color: #1e6bb8;
+}
+
 .markdown-body .anchor {
   float: left;
   line-height: 1;
   margin-left: -20px;
   padding-right: 4px;
+}
+
+.markdown-body del {
+  color: #ff4642;
+}
+
+.markdown-body * {
+  color: #4a4a4a;
 }
 
 .markdown-body .anchor:focus {
@@ -1052,4 +1075,25 @@ module.exports = `.markdown-body {
   border-radius: 4px;
   width: 90px !important;
   height: auto !important;
-}`
+}
+
+.markdown-body .g-emoji {
+  display: inline;
+}
+
+.markdown-body .woap-links .item {
+  display: flex;
+  word-wrap: break-word !important;
+}
+
+.markdown-body .woap-links .item span {
+  width: 10%;
+  font-family: ptima-Regular, Optima, PingFangSC-light, PingFangTC-light, "PingFang SC", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
+.markdown-body .woap-links .item p {
+  width: 90%;
+  word-break: break-all;
+  margin: 0;
+}
+`;

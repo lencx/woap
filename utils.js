@@ -23,11 +23,13 @@ function postFootnotes(content) {
   content = content.replace(/<a (.+?)>(.+?)<\/a>/ig, (_, a, b) => {
     const _a = a.match(/href=\"(.+?)\"/);
     footnotes.push([_a[1], b]);
-    return `<a ${a}>${b}<sup>[${footnotes.length}]</sup></a>`
+    return `<span style="color: #1e6bb8;" ${a}>${b}<sup style="line-height: 0;color: #1e6bb8;">[${footnotes.length}]</sup></span>`
   });
 
-  const footContent = footnotes.map((i) => `<li style="font-size: 14px"><b style="color: #666">${i[1]}</b>: <span style="color: #888">${i[0]}</span></li>`).join('\n');
-  content += `<hr>\n<h4>${argv['footnote-title'] || '参考资料'}</h4><ol>${footContent}</ol>`;
+  content = content.replace(/<li>(.+?)<\/li>/ig, `<li><span>$1</span></li>`);
+
+  const footContent = footnotes.map((i, idx) => `<span class="item" style="font-size: 14px"><span style="color: #666">[${idx+1}]</span><p>${i[1]}: <em style="color: #888">${i[0]}</em></p></span>`).join('\n');
+  content += `<hr>\n<h4>${argv['footnote-title'] || '参考资料'}</h4><section class="woap-links">${footContent}</section>`;
 
   return content;
 }
@@ -199,8 +201,8 @@ window.addEventListener('load', function() {
 </script>
 </head>
 <body>
+<h2 class="woap-title">${title}</h2>
 <div class="markdown-body" id="woap-body">
-<h2>${title}</h2>
 <div>${content}</div>
 </div>
 <div id="woap-btn" style="position: fixed;top: 10px;right: 10px;width: 43px;height: 41px;box-sizing: border-box;cursor: pointer;background: #fff;border-radius: 50%;padding: 8px;box-shadow: 0 0 2px #d8d8d8;">
