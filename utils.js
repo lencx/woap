@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const mdcss = require('./mdcss');
 
-const { token, ext = 'html' } = argv;
+const { token, ext = 'html', ignore } = argv;
 
 const graphqlClient = graphql.defaults({
   headers: {
@@ -22,13 +22,23 @@ function postFootnotes(content) {
 
   content = content.replace(/<a (.+?)>(.+?)<\/a>/ig, (_, a, b) => {
     const _a = a.match(/href=\"(.+?)\"/);
+
+    if (ignore) {
+      const pathname = (new URL(_a[1]) || {}).pathname;
+      if (pathname && !new RegExp(ignore).test(pathname)) {
+        footnotes.push([_a[1], b]);
+        return `<span style="color: #1e6bb8;" ${a}>${b}<sup style="line-height: 0;color: #1e6bb8;">[${footnotes.length}]</sup></span>`
+      }
+      return _;
+    }
+
     footnotes.push([_a[1], b]);
     return `<span style="color: #1e6bb8;" ${a}>${b}<sup style="line-height: 0;color: #1e6bb8;">[${footnotes.length}]</sup></span>`
   });
 
   content = content.replace(/<li>(.+?)<\/li>/ig, `<li><span>$1</span></li>`);
 
-  const footContent = footnotes.map((i, idx) => `<span class="item" style="font-size: 14px"><span style="color: #666">[${idx+1}]</span><p>${i[1]}: <em style="color: #888">${i[0]}</em></p></span>`).join('\n');
+  const footContent = footnotes.map((i, idx) => `<span class="item" style="font-size: 14px"><span style="color: #555">[${idx+1}]</span><p><span style="margin-right: 5px;">${i[1]}:</span> <em style="color: #999">${i[0]}</em></p></span>`).join('\n');
   content += `<hr>\n<h4>${argv['footnote-title'] || '参考资料'}</h4><section class="woap-links">${footContent}</section>`;
 
   return content;

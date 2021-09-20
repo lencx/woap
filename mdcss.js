@@ -678,9 +678,13 @@ module.exports = `.woap-title {
 }
 
 .markdown-body blockquote {
-  padding: 0 1em;
-  color: #6a737d;
+  padding: 0.5rem 1em;
   border-left: .25em solid #dfe2e5;
+  background: #f8f8f8;
+}
+
+.markdown-body blockquote > * {
+  color: #999999 !important;
 }
 
 .markdown-body blockquote>:first-child {
@@ -823,10 +827,6 @@ module.exports = `.woap-title {
   border-radius: 3px;
 }
 
-.markdown-body pre {
-  word-wrap: normal;
-}
-
 .markdown-body pre>code {
   padding: 0;
   margin: 0;
@@ -839,21 +839,25 @@ module.exports = `.woap-title {
 
 .markdown-body .highlight {
   margin-bottom: 16px;
-}
-
-.markdown-body .highlight pre {
-  margin-bottom: 0;
-  word-break: normal;
+  overflow: hidden;
 }
 
 .markdown-body .highlight pre,
 .markdown-body pre {
+  display: block;
   padding: 16px;
-  overflow: auto;
   font-size: 85%;
   line-height: 1.45;
   background-color: #f6f8fa;
   border-radius: 3px;
+  margin-bottom: 5px;
+  word-break: normal;
+  white-space: pre;
+}
+
+.markdown-body pre {
+  white-space: pre;
+  overflow-x: auto;
 }
 
 .markdown-body pre code {
